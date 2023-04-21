@@ -28,6 +28,7 @@ body,
     z-index: 9999;
     max-width: 0%;
     background-color: red;
+    cursor: pointer;
 }
 
 .leaflet-popup-content-wrapper {
