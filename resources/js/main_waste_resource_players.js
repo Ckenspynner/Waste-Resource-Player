@@ -20,7 +20,7 @@ var map = L.map("map", {
   zoomControl: false,
   layers: [osmMap],
 });
-
+map.attributionControl.setPrefix('<strong>&copy; Copyright 2023 KMFRI</strong>');
 L.control
   .zoom({
     position: "bottomright",
@@ -50,14 +50,53 @@ function makePopup(feature) {
     `;
 }
 
+// //Passing Filter string
+// var StringFilter1 = new RegExp("Kwale", "g");
 var country_Data;
+// //Load the data from database geojson
+// var country_Data1 = L.geoJSON(data, {
+//   onEachFeature: showPopup,
+//   filter: function (feature, latlon) {
+//     if (feature.properties.County.match(StringFilter1)) {
+//       return true;
+//     }
+//   },
+// });
 
-var country_Data = L.geoJSON(countryData);
-//Using a Layer Group to add/ remove data from the map.
+//Load geojson on map reload
 var myData = L.layerGroup([]);
 
+country_Data = L.geoJSON(countryData, {
+  style: function (feature) {
+    return {
+      color: "black",
+      fillOpacity: 0,
+    };
+  },
+  filter: function (feature, latlon) {
+        return true;
+    
+  },
+  center: [0.721645, 32.013793],
+  zoom: 5,
+});
+
+myData.addLayer(country_Data);
+
+//Load markers on map reload
+
+var player_Data = L.geoJSON(data, {
+  onEachFeature: showPopup,
+});
+
+ //Using a Layer Group to add/ remove data from the map.
+//  var markers = L.markerClusterGroup();
+//  markers.addLayer(player_Data);
+ myData.addLayer(player_Data);
+ myData.addTo(map);
+
 var overlayMaps = {
-  Region: country_Data,
+ // Region: country_Data,
 };
 
 // Adding the defined providers above to map
@@ -131,7 +170,7 @@ function Get_County_to_Focus() {
   var player_Data = L.geoJSON(data, {
     onEachFeature: showPopup,
     filter: function (feature, latlon) {
-      if (x === "All Counties") {
+      if (x === "All Counties"|| x===null) {
         return true;
       } else {
         if (feature.properties.County.match(StringFilter)) {
