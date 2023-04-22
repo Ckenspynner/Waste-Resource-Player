@@ -50,25 +50,14 @@ function makePopup(feature) {
     `;
 }
 
-//Passing Filter string
-var StringFilter1 = new RegExp("Kwale", "g");
 var country_Data;
-//Load the data from database geojson
-var country_Data1 = L.geoJSON(data, {
-  onEachFeature: showPopup,
-  filter: function (feature, latlon) {
-    if (feature.properties.County.match(StringFilter1)) {
-      return true;
-    }
-  },
-});
 
 var country_Data = L.geoJSON(countryData);
 //Using a Layer Group to add/ remove data from the map.
 var myData = L.layerGroup([]);
 
 var overlayMaps = {
-  Kenya: country_Data,
+  Region: country_Data,
 };
 
 // Adding the defined providers above to map
@@ -219,7 +208,27 @@ function Get_Waste_to_Focus() {
         fillOpacity: 0,
       };
     },
+    onEachFeature(feature, layer) {
+      layer.on('mouseover', function () {
+        this.setStyle({
+          color: '#da624a',
+          fillOpacity: 0.5,
+        });
+      });
+      layer.on('mouseout', function () {
+        this.setStyle({
+          color: "black",
+         fillOpacity: 0,
+        });
+      });
+
+      layer.bindTooltip(feature.properties.ADM2_EN+"&nbsp;Sub County", {closeButton: false, offset: L.point(0, -20)});
+  },
+    
   });
+  // .bindPopup(function (layer){
+  //   return `<h4 style="padding: 20px;"><strong>${layer.feature.properties.ADM2_EN}</strong> Sub County</h4>`;
+  // });
 
   myData.addLayer(country_Data);
 
