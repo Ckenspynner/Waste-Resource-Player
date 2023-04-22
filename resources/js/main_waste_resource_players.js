@@ -51,18 +51,7 @@ function makePopup(feature) {
 }
 
 // //Passing Filter string
-// var StringFilter1 = new RegExp("Kwale", "g");
 var country_Data;
-// //Load the data from database geojson
-// var country_Data1 = L.geoJSON(data, {
-//   onEachFeature: showPopup,
-//   filter: function (feature, latlon) {
-//     if (feature.properties.County.match(StringFilter1)) {
-//       return true;
-//     }
-//   },
-// });
-
 //Load geojson on map reload
 var myData = L.layerGroup([]);
 
@@ -77,9 +66,9 @@ country_Data = L.geoJSON(countryData, {
         return true;
     
   },
-  center: [0.721645, 32.013793],
-  zoom: 5,
 });
+
+map.flyTo([-3.973658, 39.109089], 8);
 
 myData.addLayer(country_Data);
 
