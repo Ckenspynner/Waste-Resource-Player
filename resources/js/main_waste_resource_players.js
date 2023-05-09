@@ -1,13 +1,35 @@
 // List of providers
-var osmMap = L.tileLayer.provider("OpenStreetMap.Mapnik");
-var stamenMap = L.tileLayer.provider("Stamen.Watercolor");
-var imageryMap = L.tileLayer.provider("Esri.WorldImagery");
+
+// OpenStreetMap
+var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+// Hybrid maps
+var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+// Satellite maps
+var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+// Terrain maps
+var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
 
 // Adding providers to a base map
 var baseMaps = {
-  "Open Street Map": osmMap,
-  "Stamen Watercolor": stamenMap,
-  "World Imagery": imageryMap,
+  "Google Street Map": googleStreets,
+  "Google Hybrid Map": googleHybrid,
+  "Google Satelite Map": googleSat,
+  "Google Terrain Map": googleTerrain,
 };
 
 // Defining map center
@@ -16,9 +38,9 @@ var map = L.map("map", {
   // zoom: 5,
   center: [0.721645, 32.013793],
   zoom: 5,
-  //layers: [osmMap, indStateLayer]
+  //layers: [googleStreets, indStateLayer]
   zoomControl: false,
-  layers: [osmMap],
+  layers: [googleStreets],
 });
 map.attributionControl.setPrefix('<strong>&copy; Copyright 2023 KMFRI</strong>');
 L.control
@@ -51,7 +73,18 @@ function makePopup(feature) {
 }
 
 // //Passing Filter string
+// var StringFilter1 = new RegExp("Kwale", "g");
 var country_Data;
+// //Load the data from database geojson
+// var country_Data1 = L.geoJSON(data, {
+//   onEachFeature: showPopup,
+//   filter: function (feature, latlon) {
+//     if (feature.properties.County.match(StringFilter1)) {
+//       return true;
+//     }
+//   },
+// });
+
 //Load geojson on map reload
 var myData = L.layerGroup([]);
 
@@ -67,15 +100,14 @@ country_Data = L.geoJSON(countryData, {
     
   },
 });
-
 map.flyTo([-3.973658, 39.109089], 8);
-
 myData.addLayer(country_Data);
 
 //Load markers on map reload
 
 var player_Data = L.geoJSON(data, {
   onEachFeature: showPopup,
+  
 });
 
  //Using a Layer Group to add/ remove data from the map.
